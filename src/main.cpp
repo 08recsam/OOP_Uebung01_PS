@@ -28,7 +28,7 @@
 #include "analogblinker.h"
 
 #define LED1 5    // Low-side switch (leuchtet mit LOW)
-#define LED2 6    // High-side switch (leuchtet mit HIGH)
+#define LED2 6  // High-side switch (leuchtet mit HIGH)
 #define TASTER1 3 // HIGH wenn gedrückt
 #define TASTER2 2 // LOW wenn gedrückt
 #define POTI A7   // Poti an A7
