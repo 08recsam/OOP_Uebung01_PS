@@ -42,11 +42,11 @@ button taster2;
 analogblinker a_blinker;
 void setup()
 {
-    pinMode(TASTER1, INPUT_PULLUP)
-    pinMode(TASTER2, INPUT_PULLUP)
-    pinMode(POTI, INPUT_PULLUP)
-    pinMode(LED1, OUTPUT)
-    pinMode(LED2, OUTPUT)
+    pinMode(TASTER1, INPUT_PULLUP);
+    pinMode(TASTER2, INPUT_PULLUP);
+    pinMode(POTI, INPUT_PULLUP);
+    pinMode(LED1, OUTPUT);
+    pinMode(LED2, OUTPUT);
     Serial.begin(115200);
     Serial.println("..Start..\n");
     pinMode(LED1, OUTPUT);
