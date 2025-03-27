@@ -23,6 +23,9 @@
 // ****************************************************************************
 
 #include <Arduino.h>
+#include "helper.h"
+#include "digitalblinker.h"
+#include "analogblinker.h"
 
 #define LED1 5    // Low-side switch (leuchtet mit LOW)
 #define LED2 6    // High-side switch (leuchtet mit HIGH)
