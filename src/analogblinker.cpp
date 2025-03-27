@@ -27,7 +27,7 @@ void analogblinker::poll()
     if (!enable)
     {
         analogWrite(pin5, 0);
-        analogWrite(pin5, 0);
+        analogWrite(pin6, 0);
         return;
     }
     else if (millis() - lastpoll > polltime)
@@ -40,6 +40,7 @@ void analogblinker::poll()
         }
         uint16_t pwm = dutycycle > 255 ? 511 - dutycycle : dutycycle;
         analogWrite(pin5, pwm);
+        analogWrite(pin6, pwm);
         if (sync)
             analogWrite(pin5, pwm);
         else
