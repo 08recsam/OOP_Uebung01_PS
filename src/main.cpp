@@ -42,11 +42,17 @@
  {
      Serial.begin(115200);
      Serial.println("..Start..\n");
-     
+     pinMode(LED1, OUTPUT);
+     pinMode(LED2, OUTPUT);
+     pinMode(TASTER1, INPUT_PULLUP);
+     pinMode(TASTER2, INPUT_PULLUP);
+     pinMode(POTI, INPUT);
  }
 
  void loop()
  {
+    taster1.init(TASTER1, INPUT_PULLUP, DB_ZEIT, LONGPRESSTIME);
+    taster2.init(TASTER1, INPUT_PULLUP, DB_ZEIT, LONGPRESSTIME);
 
  }
  
