@@ -72,6 +72,7 @@ void loop()
     {
         a_blinker.setblinktime(2000);
     }
+    
     else if (taster1.falling)
     {
         a_blinker.enable = !a_blinker.enable;
