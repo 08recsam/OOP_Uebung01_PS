@@ -97,7 +97,7 @@ void loop()
     }
     if (Serial.available())
     {
-        Serial.print(Serial.read());
+        Serial.print((char)Serial.read());
     }
     
 }
