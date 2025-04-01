@@ -3,31 +3,26 @@
 // ****************************************************************************
 // ************************** analogblinker ************************************
 // ****************************************************************************
-void analogblinker::setblinktime(uint16_t bt)
+
+void analogblinker::init(uint8_t _pin1, uint8_t _pin2, uint16_t _blinkTime, uint8_t _polltime, bool _sync, bool _enable)
 {
-    if (bt <= 1000 && bt >= 10)
-    {
-        blinkTime = bt;
-    }
-    else
-        Serial.println("...falscher wert du skibidi");
-}
-void analogblinker::init(uint8_t _pin5, uint8_t _pin6, uint16_t _blinkTime, uint8_t _polltime, bool _sync, bool _enable)
-{
-    pin5 = _pin5;
-    pin6 = _pin6;
+    pin1 = _pin1;
+    pin2 = _pin2;
     blinkTime = _blinkTime;
     polltime = _polltime;
     sync = _sync;
     enable = _enable;
+
+    pinMode(pin1, OUTPUT);
+    pinMode(pin2, OUTPUT);
 }
 
 void analogblinker::poll()
 {
     if (!enable)
     {
-        analogWrite(pin5, 0);
-        analogWrite(pin6, 0);
+        // analogWrite(pin1, 0);
+        // analogWrite(pin2, 0);
         return;
     }
     else if (millis() - lastpoll > polltime)
@@ -39,12 +34,30 @@ void analogblinker::poll()
             dutycycle = 0;
         }
         uint16_t pwm = dutycycle > 255 ? 511 - dutycycle : dutycycle;
-        analogWrite(pin5, pwm);
-        analogWrite(pin6, pwm);
+        analogWrite(pin1, pwm);
         if (sync)
-            analogWrite(pin5, pwm);
+            analogWrite(pin2, pwm);
         else
-            analogWrite(pin6, 255 - pwm);
+            analogWrite(pin2, 255 - pwm);
         lastpoll = millis();
     }
 }
+
+void analogblinker::setBlinkTime(uint16_t _blinktime)
+{
+    if (_blinktime > 1000)
+    {
+        blinkTime = 1000;
+        Serial.println("Blinktime > 1000ms, set to 1000ms");
+    }
+    else if (_blinktime < 50)
+    {
+        blinkTime = 50;
+        Serial.println("Blinktime < 50ms, set to 50ms");
+    }
+    else
+        blinkTime = _blinktime;
+}
+
+void analogblinker::on() { enable = true; }   // setter-Methode zum Einschalten des Blinkers
+void analogblinker::off() { enable = false; } // setter-Methode zum Ausschalten des Blinkers

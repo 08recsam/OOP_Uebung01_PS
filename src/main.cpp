@@ -27,62 +27,72 @@
 #include "digitalblinker.h"
 #include "analogblinker.h"
 
-#define LED1 5    // Low-side switch (leuchtet mit LOW)
-#define LED2 6  // High-side switch (leuchtet mit HIGH)
-#define TASTER1 3 // HIGH wenn gedrückt
-#define TASTER2 2 // LOW wenn gedrückt
-#define POTI A7   // Poti an A7
+#define LED1 3     // Low-side switch (leuchtet mit LOW)
+#define LED2 5     // Low-side switch (leuchtet mit LOW)
+#define LED3 6     // Low-side switch (leuchtet mit LOW)
+#define TASTER1 10 // LOW wenn gedrückt
+#define TASTER2 11 // LOW wenn gedrückt
+#define TASTER3 12 // LOW wenn gedrückt
+#define POT1 A7
 
-#define DB_ZEIT 50
-#define BLINKTIME 300
-#define LONGPRESSTIME 1000
+#define DEBOUNCE_TIME 20
+#define LONGPRESS_TIME 1000
+#define BLINK_TIME 200
+#define MIN_BLINK_TIME 50
+#define MAX_BLINK_TIME 1000
+#define POLL_TIME 50
 
-#define ANALOGBLINKER_POLLTIME 10 // ms
-#define ANALOGBLINKER_MIN 100     // ms
-#define ANALOGBLINKER_MAX 3000    // ms
-button taster1;
-button taster2;
-analogblinker a_blinker;
+button taster1, taster2;
+blinker d_blink;
+analogblinker a_blink;
+
 void setup()
 {
-    pinMode(TASTER1, INPUT_PULLUP);
-    pinMode(TASTER2, INPUT_PULLUP);
-    pinMode(POTI, INPUT_PULLUP);
-    pinMode(LED1, OUTPUT);
-    pinMode(LED2, OUTPUT);
-    Serial.begin(115200);
+    Serial.begin(115200); // Baud rate
     Serial.println("..Start..\n");
-    pinMode(LED1, OUTPUT);
-    pinMode(LED2, OUTPUT);
-    pinMode(TASTER1, INPUT_PULLUP);
-    pinMode(TASTER2, INPUT_PULLUP);
-    pinMode(POTI, INPUT);
-    taster1.init(TASTER1, false, DB_ZEIT, LONGPRESSTIME);
-    taster2.init(TASTER2, false, DB_ZEIT, LONGPRESSTIME);
-    a_blinker.init(LED1, LED2, BLINKTIME, ANALOGBLINKER_POLLTIME, true, true);
+
+    taster1.init(TASTER1, INPUT_PULLUP, DEBOUNCE_TIME, LONGPRESS_TIME);
+    taster2.init(TASTER2, INPUT_PULLUP, DEBOUNCE_TIME, LONGPRESS_TIME);
+
+    d_blink.init(LED1, true, LED2, true, BLINK_TIME, false);
+    a_blink.init(LED1, LED2, BLINK_TIME, POLL_TIME, false, false);
 }
 
 void loop()
 {
     taster1.poll();
     taster2.poll();
-    a_blinker.poll();
-    a_blinker.setblinktime(((((ANALOGBLINKER_MAX - ANALOGBLINKER_MIN) / 1023.0) * analogRead(POTI)) + 100) / 4);
-    if (taster1.longpress)
+    a_blink.poll();
+    d_blink.poll();
+
+    uint16_t blinktime = MIN_BLINK_TIME + ((MAX_BLINK_TIME - MIN_BLINK_TIME) / 1023.0) * analogRead(POT1);
+    a_blink.setBlinkTime(blinktime);
+    d_blink.setBlinkTime(blinktime);
+
+    if (taster1.rising)
     {
-        a_blinker.setblinktime(2000);
+        Serial.print("digital blinker EIN : ");
+        Serial.print(blinktime);
+        Serial.println("ms");
+        a_blink.off();
+        d_blink.on();
     }
-    
-    else if (taster1.falling)
+
+    if (taster2.rising)
     {
-        a_blinker.enable = !a_blinker.enable;
-        if (a_blinker.enable)
-        {
-            Serial.println("Blinker eingeschaltet");
-        }
-        else
-        {
-            Serial.println("Blinker ausgeschaltet");
-        }
+        Serial.print("analog blinker EIN : ");
+        Serial.print(blinktime);
+        Serial.println("ms");
+        d_blink.off();
+        a_blink.on();
+    }
+
+    if (taster1.longpress || taster2.longpress)
+    {
+        Serial.println("BLINKER AUS");
+        a_blink.off();
+        d_blink.off();
+        digitalWrite(LED1, HIGH);
+        digitalWrite(LED2, HIGH);    
     }
 }
