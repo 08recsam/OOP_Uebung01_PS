@@ -69,15 +69,6 @@ void loop()
     a_blink.setBlinkTime(blinktime);
     d_blink.setBlinkTime(blinktime);
 
-    if (taster1.rising)
-    {
-        Serial.print("digital blinker EIN : ");
-        Serial.print(blinktime);
-        Serial.println("ms");
-        a_blink.off();
-        d_blink.on();
-    }
-
     if (taster2.rising)
     {
         Serial.print("analog blinker EIN : ");
@@ -86,18 +77,25 @@ void loop()
         d_blink.off();
         a_blink.on();
     }
-
-    if (taster1.longpress || taster2.longpress)
-    {
-        Serial.println("BLINKER AUS");
-        a_blink.off();
-        d_blink.off();
-        digitalWrite(LED1, HIGH);
-        digitalWrite(LED2, HIGH);    
-    }
     if (Serial.available())
     {
-        Serial.print((char)Serial.read());
+        if (Serial.print((char)Serial.read()) == '2')
+        {
+
+            Serial.print("digital blinker EIN : ");
+            Serial.print(blinktime);
+            Serial.println("ms");
+            a_blink.off();
+            d_blink.on();
+        }
+
+        if (Serial.print((char)Serial.read()) == '1')
+        {
+            Serial.println("BLINKER AUS");
+            a_blink.off();
+            d_blink.off();
+            digitalWrite(LED1, HIGH);
+            digitalWrite(LED2, HIGH);
+        }
     }
-    
 }
