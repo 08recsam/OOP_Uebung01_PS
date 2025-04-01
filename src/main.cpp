@@ -95,7 +95,7 @@ void loop()
         digitalWrite(LED1, HIGH);
         digitalWrite(LED2, HIGH);    
     }
-    if (Serial.available)
+    if (Serial.available())
     {
         Serial.print(Serial.read());
     }
