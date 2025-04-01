@@ -77,25 +77,43 @@ void loop()
         d_blink.off();
         a_blink.on();
     }
+    // if (Serial.available())
+    // {
+    //     if (Serial.print((char)Serial.read()) == '2')
+    //     {
+
+    //         Serial.print("digital blinker EIN : ");
+    //         Serial.print(blinktime);
+    //         Serial.println("ms");
+    //         a_blink.off();
+    //         d_blink.on();
+    //     }
+
+    //     if (Serial.print((char)Serial.read()) == '1')
+    //     {
+           
+    //     }
+    // }
     if (Serial.available())
     {
-        if (Serial.print((char)Serial.read()) == '2')
+        char c = Serial.read();
+        Serial.print(c);
+        if (c == '1')
         {
-
             Serial.print("digital blinker EIN : ");
             Serial.print(blinktime);
             Serial.println("ms");
             a_blink.off();
             d_blink.on();
         }
-
-        if (Serial.print((char)Serial.read()) == '1')
+        else if (c == '2')
         {
             Serial.println("BLINKER AUS");
             a_blink.off();
             d_blink.off();
             digitalWrite(LED1, HIGH);
-            digitalWrite(LED2, HIGH);
+            digitalWrite(LED2, HIGH); 
         }
+        
     }
 }
