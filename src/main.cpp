@@ -58,6 +58,8 @@ void setup()
     a_blink.init(LED1, LED2, BLINK_TIME, POLL_TIME, false, false);
 }
 
+int x = 0;
+
 void loop()
 {
     taster1.poll();
@@ -91,14 +93,14 @@ void loop()
 
     //     if (Serial.print((char)Serial.read()) == '1')
     //     {
-           
+
     //     }
     // }
     if (Serial.available())
     {
         char c = Serial.read();
-        Serial.print(c);
-        if (c == '1')
+        
+        if (c == 'e')
         {
             Serial.print("digital blinker EIN : ");
             Serial.print(blinktime);
@@ -106,14 +108,20 @@ void loop()
             a_blink.off();
             d_blink.on();
         }
-        else if (c == '2')
+        else if (c == 'a')
         {
             Serial.println("BLINKER AUS");
             a_blink.off();
             d_blink.off();
             digitalWrite(LED1, HIGH);
-            digitalWrite(LED2, HIGH); 
+            digitalWrite(LED2, HIGH);
         }
-        
+
+        if (c >= 48 && c <= 57) // Werte von 0-9
+        {
+            x *= 10;
+            x += (c - 48);
+            Serial.println(x);
+        }
     }
 }
