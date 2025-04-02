@@ -1,1 +1,6 @@
-include "test.h"
+#include "test.h"
+
+void test::dosmth()
+{
+    //secret
+}
